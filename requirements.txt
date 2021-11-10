@@ -1,0 +1,17 @@
+# ---------- ---------- package:
+numpy
+scipy
+sympy
+matplotlib
+
+# ---------- ---------- Documenting:
+sphinx # == 2.1.2
+sphinx_rtd_theme
+
+# ---------- ---------- distributing:
+twine
+
+# ---------- ---------- Testing:
+pytest
+PyQt5
+PyQt5-stubs
