@@ -1,6 +1,7 @@
 #
 __labs/
 __dist/
+__refs/
 
 # pycharm
 .idea/

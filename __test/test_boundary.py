@@ -188,10 +188,10 @@ def test_nonhomogeneous_polynomial_fit(hom_bc_array_0, hom_bc_array_1, nho_bc_ar
 
 # ========== ========== ========== ========== ========== ==========
 def _test_homogeneous_polynomial_fit(lbc: BoundaryCondition, ubc: BoundaryCondition, degree):
-    poly = BoundaryCondition.fit_polynomial(lbc, ubc, degree=degree)
-
     print()
-    print(lbc, ubc, poly, sep=', ')
+    print(lbc, ubc, sep=', ')
+    poly = BoundaryCondition.fit_polynomial(lbc, ubc, min_degree=degree)
+    print(poly)
     print(lbc.get_polynomial_error(poly))
     print(ubc.get_polynomial_error(poly))
     print('\n\n')
@@ -207,6 +207,8 @@ def test_homogeneous_polynomial_fit(hom_bc_array_0, hom_bc_array_1):
             _test_homogeneous_polynomial_fit(lbc, ubc, degree=2)
             _test_homogeneous_polynomial_fit(lbc, ubc, degree=3)
             _test_homogeneous_polynomial_fit(lbc, ubc, degree=4)
+            _test_homogeneous_polynomial_fit(lbc, ubc, degree=5)
+            _test_homogeneous_polynomial_fit(lbc, ubc, degree=6)
 
 
 
