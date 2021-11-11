@@ -23,11 +23,26 @@ pip install odelabs
 ----
 ## Usage
 
+Consider the second order linear differential operator given by 
+
+![equation](https://latex.codecogs.com/svg.latex?\large&space;\mathsf{L}y\left(x\right)=p\left(x\right)y^{\prime\prime}\left(x\right)+r\left(x\right)y^\prime\left(x\right)+q\left(x\right)y\left(x\right)),
+
+where the functions are real and defined at the compact interval
+![equation](https://latex.codecogs.com/svg.latex?\large&space;\left[x^-,x^+\right]), and mixed
+boundary conditions of the form
+
+![equation](https://latex.codecogs.com/svg.latex?\large&space;a^-y\left(x^-\right)+b^-y^{\prime}\left(x^-\right)=c^-) 
+
+![equation](https://latex.codecogs.com/svg.latex?\large&space;a^+y\left(x^+\right)+b^+y^{\prime}\left(x^+\right)=c^+) 
+
+obeying ![equation](https://latex.codecogs.com/svg.latex?\large&space;\left(a^{\pm}\right)^2+\left(b^{\pm}\right)^2\neq0).
+
+### Boundary Conditions
+
+In general case, 
 
 ![equation](https://latex.codecogs.com/svg.latex?\large&space;ay\left(x\right)+by^{\prime}\left(x\right)=c) 
 
-
-### Boundary Conditions
 
 ```pycon
 >>> from odelabs import BoundaryCondition as BC
@@ -36,7 +51,7 @@ pip install odelabs
 >>> lbc
 Boundary Condition: y'(0) = 3
 
->>> ubc = BC(x=1, a=1, b=0, c=0)  # Homogenous Dirichlet BC at x=1
+>>> ubc = BC(x=1, a=1, b=0, c=0)  # Homogeneous Dirichlet BC at x=1
 >>> ubc
 Boundary Condition: y(1) = 0
 
