@@ -91,6 +91,91 @@ class BoundaryCondition:
 
         return numpy.polynomial.Polynomial(coefficients)
 
+    @classmethod
+    def __fit_polynomial_for_homogeneous_bcs(cls, lbc, ubc, degree):
+
+        assert degree >= 2
+
+        M = numpy.array([
+            [lbc._polynomial_regressor(0), lbc._polynomial_regressor(1), lbc._polynomial_regressor(degree)],
+            [ubc._polynomial_regressor(0), ubc._polynomial_regressor(1), ubc._polynomial_regressor(degree)],
+        ])
+
+        A = M[:, [True, True, False]]
+        dA = numpy.linalg.det(A)
+
+        B = M[:, [True, False, True]]
+        dB = numpy.linalg.det(B)
+
+        C = M[:, [False, True, True]]
+        dC = numpy.linalg.det(C)
+
+        if not cls._equals_zero(dA):
+            # no problem! planes are not the same, but c2 is not zero
+            coefficients = [dC/dA, -dB/dA] + (degree-2)*[0] + [1]
+
+        else:
+
+            if cls._equals_zero(dB) and cls._equals_zero(dC):
+                # no problem! planes are the same
+
+                if cls._equals_zero(M[0, 0]):
+                    coefficients = [0, -M[0, 2] / M[0, 1]] + (degree - 2) * [0] + [1]
+
+                else:
+                    coefficients = [-M[0, 2] / M[0, 0], 0] + (degree - 2) * [0] + [1]
+
+            else:
+                # problem!! planes are not the same, but c2 is zero
+
+                if degree == 2:  # fit a polynomial of degree < 2
+                    coefficients = numpy.linalg.lstsq(A[1, :].reshape(1, -1), [[0]])[0].reshape(-1, )
+
+                else:
+                    return cls.__fit_polynomial_for_homogeneous_bcs_alternative(lbc, ubc, degree)
+
+        return numpy.polynomial.Polynomial(coefficients)
+
+    @classmethod
+    def __fit_polynomial_for_homogeneous_bcs_alternative(cls, lbc, ubc, degree):
+
+        assert degree > 2
+
+        M = numpy.array([
+            [lbc._polynomial_regressor(0), lbc._polynomial_regressor(2), lbc._polynomial_regressor(degree)],
+            [ubc._polynomial_regressor(0), ubc._polynomial_regressor(2), ubc._polynomial_regressor(degree)],
+        ])
+
+        A = M[:, [True, True, False]]
+        dA = numpy.linalg.det(A)
+
+        B = M[:, [True, False, True]]
+        dB = numpy.linalg.det(B)
+
+        C = M[:, [False, True, True]]
+        dC = numpy.linalg.det(C)
+
+        if not cls._equals_zero(dA):
+            # no problem! planes are not the same, but leading coefficient is not zero
+            coefficients = [dC / dA, -dB / dA] + (degree - 2) * [0] + [1]
+
+        else:
+
+            if cls._equals_zero(dB) and cls._equals_zero(dC):
+                # no problem! planes are the same
+
+                if cls._equals_zero(M[0, 0]):
+                    coefficients = [0, 0, -M[0, 2] / M[0, 1]] + (degree - 1) * [0] + [1]
+
+                else:
+                    coefficients = [-M[0, 2] / M[0, 0], 0, 0] + (degree - 1) * [0] + [1]
+
+            else:
+                # problem!! planes are not the same, but leading coefficient is zero
+                raise NotImplementedError()
+
+        return numpy.polynomial.Polynomial(coefficients)
+
     # ========== ========== ========== ========== ========== protected methods
     def _parse_theta_and_c(self, a, b, c, theta):
 
@@ -167,7 +252,7 @@ class BoundaryCondition:
 
         # ---------- ---------- ---------- ---------- ---------- homogeneous bc
         if lbc.is_homogeneous() and ubc.is_homogeneous():
-            raise NotImplementedError()
+            return cls.__fit_polynomial_for_homogeneous_bcs(lbc, ubc, degree)
 
         # ---------- ---------- ---------- ---------- ---------- non-homogeneous
         else:
