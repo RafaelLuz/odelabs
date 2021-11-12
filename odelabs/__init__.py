@@ -18,4 +18,4 @@ __description__ = "Ordinary Differential Equations Labs"
 __url__ = 'https://github.com/RafaelLuz/odelabs'
 
 
-from .boundary import BoundaryCondition
+from .boundary import BoundaryCondition, Domain

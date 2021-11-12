@@ -8,7 +8,82 @@ Date: 10/11/2021
 
 import numpy
 
-from odelabs.utils import parse_float, parse_positive_integer, parse_non_negative_integer
+from odelabs.utils import parse_float, parse_non_negative_integer
+
+
+class Domain:
+
+    # ========== ========== ========== ========== ========== class attributes
+    ...
+
+    # ========== ========== ========== ========== ========== special methods
+    def __init__(self, infimum=0, supremum=1):
+
+        self.__infimum = parse_float(infimum)
+        self.__supremum = parse_float(supremum)
+
+        assert self.__infimum < self.__supremum
+
+    def __contains__(self, value):
+        return self.infimum <= value <= self.supremum
+
+    def __repr__(self):
+        return f"[{self.inf:.3g}, {self.sup:.3g}]"
+
+    # ========== ========== ========== ========== ========== private methods
+    ...
+
+    # ========== ========== ========== ========== ========== protected methods
+    ...
+
+    # ========== ========== ========== ========== ========== public methods
+    def shatter(self, N=None, points=None):
+        # ---------- ---------- ---------- ---------- ---------- ----------
+        if N:
+            points = self.linspace(N+1)
+
+        elif points:
+            assert all(x in self for x in points)
+            points = sorted(points)
+
+        else:
+            raise ValueError()
+
+        return [Domain(inf, sup) for inf, sup in zip(points[:-1], points[1:])]
+
+    def linspace(self, N):
+        return numpy.linspace(self.infimum, self.supremum, N)
+
+    def arange(self, dx):
+        return numpy.arange(self.infimum, self.supremum, dx)
+
+    def integrate_polynomial(self, poly):
+        return poly.integ(lbnd=self.infimum)(self.supremum)
+
+    # ---------- ---------- ---------- ---------- ---------- properties
+    @property
+    def infimum(self):
+        return self.__infimum
+
+    @property
+    def supremum(self):
+        return self.__supremum
+
+    @property
+    def measure(self):
+        return self.supremum - self.infimum
+
+    @property
+    def inf(self):
+        return self.infimum
+
+    @property
+    def sup(self):
+        return self.supremum
+
+    @property
+    def length(self):
+        return self.measure
 
 
 class BoundaryCondition:
@@ -20,6 +95,7 @@ class BoundaryCondition:
     where a, b and c are real numbers
 
     """
+
     # ========== ========== ========== ========== ========== class attributes
     ...
 
@@ -312,3 +388,4 @@ class BoundaryCondition:
             self.__tan_theta = numpy.inf if self.theta == numpy.pi/2 else numpy.tan(self.theta)
 
             return self.__tan_theta
+

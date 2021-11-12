@@ -88,13 +88,7 @@ def mix_nho_bc_1():
 
 # ========== ========== ========== ========== ========== ========== combinations
 @pytest.fixture
-def hom_bc_array(
-        dir_hom_bc_0,
-        dir_hom_bc_1,
-        neu_hom_bc_0,
-        neu_hom_bc_1,
-        mix_hom_bc_0,
-        mix_hom_bc_1):
+def hom_bc_array(dir_hom_bc_0, dir_hom_bc_1, neu_hom_bc_0, neu_hom_bc_1, mix_hom_bc_0, mix_hom_bc_1):
 
     return [
         dir_hom_bc_0,
@@ -107,13 +101,7 @@ def hom_bc_array(
 
 
 @pytest.fixture
-def nho_bc_array(
-        dir_nho_bc_0,
-        dir_nho_bc_1,
-        neu_nho_bc_0,
-        neu_nho_bc_1,
-        mix_nho_bc_0,
-        mix_nho_bc_1):
+def nho_bc_array(dir_nho_bc_0, dir_nho_bc_1, neu_nho_bc_0, neu_nho_bc_1, mix_nho_bc_0, mix_nho_bc_1):
 
     return [
         dir_nho_bc_0,
@@ -209,37 +197,4 @@ def test_homogeneous_polynomial_fit(hom_bc_array_0, hom_bc_array_1):
             _test_homogeneous_polynomial_fit(lbc, ubc, degree=4)
             _test_homogeneous_polynomial_fit(lbc, ubc, degree=5)
             _test_homogeneous_polynomial_fit(lbc, ubc, degree=6)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
